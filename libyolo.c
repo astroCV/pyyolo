@@ -121,7 +121,7 @@ detection_info **yolo_detect(yolo_handle handle, image im, float thresh, float h
 	return info;
 }
 
-detection_info **yolo_test(yolo_handle handle, char *filename, float thresh, float hier_thresh, int *num, float **feature_map, int *map_size)
+detection_info **yolo_test(yolo_handle handle, char *filename, float thresh, float hier_thresh, float nnms, int *num, float **feature_map, int *map_size)
 {
 	yolo_obj *obj = (yolo_obj *)handle;
 
@@ -139,9 +139,12 @@ detection_info **yolo_test(yolo_handle handle, char *filename, float thresh, flo
 	*map_size = obj->net.outputs;
 	printf("%s: Predicted in %f seconds.\n", input, sec(clock()-time));
 
+        obj->nms = nnms; 
+
 	layer l = obj->net.layers[obj->net.n-1];
 	get_region_boxes(l, im.w, im.h, obj->net.w, obj->net.h, thresh, obj->probs, obj->boxes, NULL, 0, 0, hier_thresh, 1);
-	if (obj->nms) do_nms_obj(obj->boxes, obj->probs, l.w*l.h*l.n, l.classes, obj->nms);
+	//if (obj->nms) always do nms
+        do_nms_obj(obj->boxes, obj->probs, l.w*l.h*l.n, l.classes, obj->nms);
 
 	list *output = make_list();
 	get_detection_info(im, l.w*l.h*l.n, thresh, obj->boxes, obj->probs, l.classes, obj->names, output);

@@ -95,15 +95,16 @@ static PyObject *pyyolo_test(PyObject *self, PyObject *args)
 	char *filename;
 	float thresh;
 	float hier_thresh;
+        float nnms;
 	float *feature_map = NULL;
 	int map_size = 0;
 	int return_map = 0;
 
-	if (!PyArg_ParseTuple(args, "sffi", &filename, &thresh, &hier_thresh, &return_map))
+	if (!PyArg_ParseTuple(args, "sfffi", &filename, &thresh, &hier_thresh, &nnms, &return_map))
 		return NULL;
 
 	int num = 0;
-	detection_info **info = yolo_test(g_handle, filename, thresh, hier_thresh, &num, &feature_map, &map_size);
+	detection_info **info = yolo_test(g_handle, filename, thresh, hier_thresh, nnms, &num, &feature_map, &map_size);
 	if (info == NULL) {
 		PyErr_SetString(PyyoloError, "Testing YOLO failed");
 		return Py_None;
