@@ -1,8 +1,10 @@
 # pyyolo
 pyyolo is a simple wrapper for YOLO.
 
+included nms parameter
+
 ## Building
-1. git clone --recursive https://github.com/thomaspark-pkj/pyyolo.git
+1. git clone --recursive https://github.com/astroCV/pyyolo
 2. (optional) Set GPU=1 and CUDNN=1 in Makefile to use GPU.
 3. make
 4. rm -rf build
